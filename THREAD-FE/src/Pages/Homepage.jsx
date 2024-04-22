@@ -29,7 +29,7 @@ const Homepage = () => {
             }
         }
         getFeedPosts();
-    }, [ShowToast])
+    }, [ShowToast , setPosts])
 
     return (
         <>

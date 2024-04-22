@@ -1,0 +1,117 @@
+import { Avatar, Box, Flex, Image, Text } from "@chakra-ui/react"
+import { BsThreeDots } from "react-icons/bs"
+import Actions from "./Actions"
+import { Menu, MenuButton, MenuList, MenuItem, } from '@chakra-ui/react'
+import useShowToast from "../hooks/useShowToast"
+import { useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom";
+
+
+const Post = ({ post, postedBy }) => {
+    const [user , setUser] = useState(null);
+    const ShowToast = useShowToast(); 
+    // const ShowToast = uswShowToast();
+    useEffect(()=>{
+       const getUser = async () => {
+        try {
+            const res = await fetch("/api/users/profile/"+ postedBy)
+            const data = await res.json();
+            console.log(data);
+            console.log(postedBy)
+            if(data.error){
+            ShowToast("Error" , data.error , "error")
+                return ;
+            }
+            setUser(data);
+            
+        } catch (error) {
+            ShowToast("Error" , error.message , "error")
+            setUser(null);
+        }
+       } 
+       getUser();
+
+    },[postedBy , ShowToast ])
+    if(!user) return null;
+    const [liked, setLiked] = useState(false)
+    const copyThreadLink = () => {
+        const currentLocation = "markzukarbarg/post/1";
+        navigator.clipboard.writeText(currentLocation).then(() => {
+            ShowToast("Success" , "URl Copied to Clipboard." , "success")
+        })
+    }
+    return (
+    
+        <Link to={`/${user.username}/post/${post._id}`}>
+        <Flex gap={3} py={5} mb={4}>
+            <Flex flexDirection={"column"} alignItems={"center"}>
+                <Avatar size={"md"} name={user.name} src={user?.profilePic} 
+                onClick={(e) => {
+							e.preventDefault();
+							navigate(`/${user.username}`);
+						}} />
+                <Box w="1px" h={"full"} bg={"gray.light"} my={2}>  </Box>
+                <Box position={"relative"} w={"full"}>
+                {post.replies.length === 0 && <Text textAlign={"center"}>😜</Text>}
+                {
+                    post.replies[0] && (
+                    <Avatar name={post[0].name} padding={"2px"} size={"xs"} src={post.replies[0].userProfilePic} position={"absolute"} top={"0px"} left={"15px"} />
+
+                    )
+                }
+                {
+                    post.replies[1] && (
+                    <Avatar name={post[1].name} padding={"2px"} size={"xs"} src={post.replies[1].userProfilePic} position={"absolute"} bottom={"0px"} right={"-5px"} />
+
+                    )
+                }
+                {
+                    post.replies[2] && (
+                    <Avatar name={post[2].name} padding={"2px"} size={"xs"} src={post.replies[2].userProfilePic} position={"absolute"} bottom={"0px"} left={"4px"} />
+                    )
+                }
+                </Box>
+            </Flex>
+            <Flex flex={1} flexDirection={"column"} gap={2}>
+                <Flex justifyContent={"space-between"} w={"full"} >
+                    <Flex w={"full"} alignItems={"center"}>
+                        <Text fontSize={"sm"} fontWeight={"bold"} >{user?.username}</Text>
+                        <Image src="/verified.png" w={4} h={4} ml={1} />
+                    </Flex>
+
+                    <Flex gap={4} alignItems={"center"}>
+                        <Text fontStyle={"sm"} color={"gray.light"} >1d</Text>
+                        <Menu>
+                            <MenuButton>
+                                <BsThreeDots ></BsThreeDots>
+                            </MenuButton>
+                            <MenuList bg={"gray.dark"}>
+                                <MenuItem bg={"gray.dark"} onClick={copyThreadLink}>Copy Thread Link</MenuItem>
+                            </MenuList>
+                        </Menu>
+                    </Flex>
+                </Flex>
+                <Text fontSize={"sm"}>{post.text}</Text>
+                {post.img && (
+                    <Box borderRadius={5} overflow={"hidden"} border={"1px solid"} borderColor={"gray.light"}>
+                        <Link to={"markzukarbarg/post/1"}>
+                            <Image src={post.img}></Image>
+                        </Link>
+                    </Box>
+                )}
+
+                <Flex gap={3} my={1}>
+                    <Actions liked={liked} setLiked={setLiked} />
+                </Flex>
+                <Flex gap={2} alignItems={"center"}>
+                    <Text color={"gray.light"} fontSize={"sm"}>{post.replies.length} replies</Text>
+                    <Box mt={1} w={.5} h={.5} borderRadius={"full"} bg={"gray.light"} ></Box>
+                    <Text color={"gray.light"} fontSize={"sm"} >{post.likes.length} likes</Text>
+                </Flex>
+            </Flex>
+        </Flex>
+        </Link>
+    )
+}
+
+export default Post

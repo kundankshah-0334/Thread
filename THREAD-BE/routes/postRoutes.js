@@ -8,7 +8,7 @@ router.get("/feed" , ProtectRoute ,getFeedPost)
 router.get("/:id"  ,getPost)
 router.post("/create", ProtectRoute ,createPost);
 router.delete("/:id" , ProtectRoute ,deletePost)
-router.post("/like/:id" , ProtectRoute ,likeUnlikePost)
-router.post("/reply/:id" , ProtectRoute ,replyPost)
+router.put("/like/:id" , ProtectRoute ,likeUnlikePost)
+router.put("/reply/:id" , ProtectRoute ,replyPost)
 
 export default router;

@@ -1,7 +1,8 @@
 import User from "../Model/User.js";
 import bcrypt from 'bcryptjs';
 import GenerateTokenAndSetCookies from "../utils/helpers/GenerateTokenAndSetCookies.js";
-import { v2 as cloudinary} from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
+import mongoose from "mongoose";
 
 const signUpuser = async (req, res) => {
     try {
@@ -31,8 +32,8 @@ const signUpuser = async (req, res) => {
                 name: newUser.name,
                 username: newUser.username,
                 email: newUser.email,
-                bio : newUser.bio,
-                profilePic : newUser.profilePic
+                bio: newUser.bio,
+                profilePic: newUser.profilePic
             });
         }
         else {
@@ -41,7 +42,7 @@ const signUpuser = async (req, res) => {
 
     } catch (error) {
         console.error("Error in Signup: " + error.message);
-        res.status(500).json({error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 const loginUser = async (req, res) => {
@@ -60,9 +61,9 @@ const loginUser = async (req, res) => {
             _id: user._id,
             name: user.name,
             email: user.email,
-            bio : user.bio,
-            profilePic : user.profilePic,
-            username : user.username
+            bio: user.bio,
+            profilePic: user.profilePic,
+            username: user.username
 
         });
 
@@ -113,57 +114,66 @@ const followUnfollowUser = async (req, res) => {
     }
 };
 const getProfile = async (req, res) => {
-    const { username } = req.params;
-        try {
-             const user = await User.findOne({username}).select("-password").select("-updatedAt");
-             if (!user) return res.status(400).json({ error: "User not found"})
+    // const { username } = req.params;
+    const { query } = req.params;
 
-             res.status(200).json(user)
- 
+    try {
+        let user;
+        if (mongoose.Types.ObjectId.isValid(query)) {
+            user = await User.findOne({ _id: query }).select("-password").select("-updatedAt");
 
-        } catch (error) {
-            console.error("Error in Get Profile : " + error.message);
-            res.status(500).json({ error: error.message });
+        } else {
+            user = await User.findOne({ username: query }).select("-password").select("-updatedAt");
         }
+
+        if (!user) return res.status(400).json({ error: "User not found" })
+
+        res.status(200).json(user)
+
+
+    } catch (error) {
+        console.error("Error in Get Profile : " + error.message);
+        res.status(500).json({ error: error.message });
+    }
 };
 const updateUser = async (req, res) => {
     const { name, username, email, password, bio } = req.body;
     let { profilePic } = req.body;
     const userId = req.user._id;
-        try {
-            let user = await User.findById(userId);
+    try {
+        let user = await User.findById(userId);
 
-            if(req.params.id !== userId.toString()) return res.status(400).json({error : "Can not update others Profile"})
+        if (req.params.id !== userId.toString()) return res.status(400).json({ error: "Can not update others Profile" })
 
-            if(!user) return res.status(400).json({error : "iuser not found"})
+        if (!user) return res.status(400).json({ error: "iuser not found" })
 
-            if(password){
-                const salt = await bcrypt.genSaltSync(10);
-                const hashedPassword = await bcrypt.hashSync(password, salt);
-                user.password=  hashedPassword;
-            }
-            if(profilePic){
-                if(user.profilePic){
-                    await cloudinary.uploader.destroy(user.profilePic.split("/").pop().split(".")[0]) ;
-                }
-                const uploadedResponce = await cloudinary.uploader.upload(profilePic);
-                profilePic = uploadedResponce.secure_url;
-            }
-
-            user.name = name || user.name;
-            user.email = email || user.email;
-            user.bio = bio || user.bio;
-            user.profilePic = profilePic || user.profilePic;
-            user.username = username || user.username;
-
-            user =  await user.save();
-
-            user.password = null;
-           res.status(200).json(user)
-
-        } catch (error) {
-            console.error("Error in Update user: " + error.message);
-            res.status(500).json({ error: error.message });
+        if (password) {
+            const salt = await bcrypt.genSaltSync(10);
+            const hashedPassword = await bcrypt.hashSync(password, salt);
+            user.password = hashedPassword;
         }
+        if (profilePic) {
+            if (user.profilePic) {
+                await cloudinary.uploader.destroy(user.profilePic.split("/").pop().split(".")[0]);
+            }
+            const uploadedResponce = await cloudinary.uploader.upload(profilePic);
+            profilePic = uploadedResponce.secure_url;
+        }
+
+        user.name = name || user.name;
+        user.email = email || user.email;
+        user.bio = bio || user.bio;
+        user.profilePic = profilePic || user.profilePic;
+        user.username = username || user.username;
+
+        user = await user.save();
+
+        user.password = null;
+        res.status(200).json(user)
+
+    } catch (error) {
+        console.error("Error in Update user: " + error.message);
+        res.status(500).json({ error: error.message });
+    }
 };
-export { signUpuser, loginUser, logoutUser, followUnfollowUser, updateUser , getProfile };
+export { signUpuser, loginUser, logoutUser, followUnfollowUser, updateUser, getProfile };
