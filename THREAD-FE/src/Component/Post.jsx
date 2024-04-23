@@ -22,7 +22,7 @@ const Post = ({ post, postedBy }) => {
 					return;
 				}
 				setUser(data);
-                console.log(post)
+                // console.log(post)
 			} catch (error) {
 				showToast("Error", error.message, "error");
 				setUser(null);
