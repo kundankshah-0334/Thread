@@ -22,7 +22,7 @@ const Homepage = () => {
                 const data = await res.json();
                 if (data.error) {
                     ShowToast("Error", data.error, "error")
-                }
+                } 
                 console.log(data);
                 setPosts(data)
 
