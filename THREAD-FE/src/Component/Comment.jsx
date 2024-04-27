@@ -8,6 +8,7 @@ import { useToast } from '@chakra-ui/react'
 const Comment = ({reply , lastReply}) => {
 
     const toast = useToast()
+    console.log(reply);
     const [liked, setLiked] = useState(false)
     const copyThreadLink = () => {
         const currentLocation = "markzukarbarg/post/1";

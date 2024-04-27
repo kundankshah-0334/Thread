@@ -3,11 +3,19 @@ import {  Modal,Button ,useColorModeValue ,Image ,  ModalCloseButton , ModalOver
 import { useRef, useState } from 'react'
 import usePreviewImg from '../hooks/usePreviewImg';
 import { BsFillImageFill } from 'react-icons/bs';
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atom/userAtom";
 import useShowToast from "../hooks/useShowToast"
+import postAtom from '../atom/postAtom';
+import { useParams } from 'react-router-dom';
 
 const CreatePost = () => {
+
+  const {username} = useParams();
+
+  const [posts, setPosts] = useRecoilState(postAtom);
+
+
   const [loading , setLoading] = useState(false)
   const user = useRecoilValue(userAtom);
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -45,6 +53,10 @@ const CreatePost = () => {
         showToast("Error" , data.error , "error")
       }
       showToast("Success" , "Post Created Successfully" , "success")
+      if(username === user.username){
+
+        setPosts([data , ...posts]);
+      }
       onClose();
       setPostText("")
       setImgUrl("")

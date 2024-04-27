@@ -3,15 +3,20 @@ import { Link } from "react-router-dom"
 import useShowToast from "../hooks/useShowToast"
 import { useEffect, useState } from "react";
 import Post from "../Component/Post";
+import { useRecoilState } from "recoil";
+import postAtom from "../atom/postAtom";
 
 const Homepage = () => {
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useRecoilState(postAtom);
+
+    // const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const ShowToast = useShowToast();
     useEffect(() => {
         const getFeedPosts = async () => {
             setLoading(true)
+            setPosts([])
             try {
                 const res = await fetch("/api/posts/feed")
                 const data = await res.json();

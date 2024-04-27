@@ -31,7 +31,7 @@ const createPost = async (req, res) => {
 
          const newPost = new Post({postedBy , text ,img})
          await newPost.save();
-         res.status(200).json({message : "Posted succefully.."})
+         res.status(200).json(newPost)
 
     } catch (error) {
         console.error("Error in post Controller page: " + error.message);
@@ -127,7 +127,7 @@ const replyPost = async (req, res) => {
          post.replies.push(reply);
          await post.save();
 
-          res.status(200).json({message : post})
+          res.status(200).json(reply)
 
     } catch (error) {
         console.error("Error in post Controller page: " + error.message);
