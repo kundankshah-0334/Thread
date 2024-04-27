@@ -47,7 +47,6 @@ export default function LoginCard() {
       setUser(data);
     } catch (error) {
       console.log({message : error.message});
-      // res.status(400).json({error : error})
     } finally{
       setLoading(false)
     }

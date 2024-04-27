@@ -43,10 +43,10 @@ const getPost = async (req, res) => {
          const post = await Post.findById(req.params.id);
 
          if(!post){
-            return res.status(404).json({error : "post not gound"})
+            return res.status(404).json({error : "post not Found"})
          } 
 
-         return res.status(200).json({post})
+          res.status(200).json(post);
 
     } catch (error) {
         console.error("Error in post Controller page: " + error.message);
@@ -60,6 +60,10 @@ const deletePost = async (req, res) => {
          if(post.postedBy.toString() !== req.user._id.toString()){
             return res.status(401).json({error : "Unauthorized user to delete this post"})
          } 
+         if(post.img){
+            const imgId = post.img.split("/").pop().split(".")[0];
+            await cloudinary.uploader.destroy(imgId)
+         }
 
          await Post.findByIdAndDelete(req.params.id);
          res.status(201).json({message : "post deleted Successfully"})
@@ -151,6 +155,22 @@ const getFeedPost = async (req, res) => {
     }
 };
  
+
+const getUserPosts = async (req, res)  => {
+    const { username } = req.params;
+
+    try {
+        const user = await User.findOne({username});
+        if(!user){
+            res.status(404).json({ error : "user not found" });
+        }
+        const posts = await Post.find({postedBy:user._id}).sort({createdAt : -1})
+        res.status(200).json(posts);
+        } catch (error) {
+          console.error("Error in post Controller page: " + error.message);
+        res.status(500).json({ error: error.message });
+    }
+}
  
  
-export { createPost , getPost , deletePost , likeUnlikePost , replyPost , getFeedPost };
+export { createPost , getPost , deletePost , likeUnlikePost , replyPost , getFeedPost , getUserPosts };
