@@ -31,6 +31,8 @@ const PostPage = () => {
   const currentPost = posts[0];
   useEffect(() => {
     const getPost = async () => {
+      setPosts([]);
+
       try {
         const res = await fetch(`/api/posts/${pid}`);
         const data = await res.json();
@@ -39,6 +41,7 @@ const PostPage = () => {
         }
         console.log(data)
         setPosts([data]);
+        // console.log(currentPost)
 
       } catch (error) {
         showToast("Error", error.message, "error")
@@ -51,15 +54,19 @@ const PostPage = () => {
 
   const handleDeletePost = async (e) => {
     try {
-      e.preventDefault();
+      // e.preventDefault();
       if (!window.confirm("Are you sure to[ delete this post ?")) return;
 
       const res = await fetch(`/api/posts/${currentPost._id}`, {
-        method: "DELETE"
+        method: "DELETE",
       })
+      const data = await res.json();
+      if (data.error) {
+         showToast("error", data.error, "error")
+         return
+      }
       showToast("Success", "Post Deleted Successfully", "success")
       navigate(`/${user.username}`);
-      const data = res.json();
       if (data.error) {
         showToast("Error", data.error, "error")
       }
@@ -114,7 +121,7 @@ const PostPage = () => {
         }
 
         <Flex gap={3} my={1}>
-          <Actions post={currentPost} />
+          <Actions key={currentPost._id} post={currentPost} />
         </Flex>
 
         <Divider my={4} />
@@ -127,12 +134,20 @@ const PostPage = () => {
         </Flex>
         <Divider my={2} />
 
-        {currentPost.replies.map(reply => (
+        {/* {currentPost.replies.map(reply => (
           <Comment
             key={reply._id}
             reply={reply}
             lastReply={reply._id === currentPost.replies[currentPost.replies.length - 1]._id} />
-        ))}
+        ))} */}
+        {currentPost.replies.map((reply) => (
+          
+				<Comment
+					key={reply._id}
+					reply={reply}
+					lastReply={reply._id === currentPost.replies[currentPost.replies.length - 1]._id}
+				/>
+			))}
         {/* <Comment likes={423} comment="This man is hero for us." name='Kola Tioluwani' src='https://bit.ly/ryan-florence'/>
         <Comment likes={117} comment= "Nice Guy." name='Kent Dodds' src='https://bit.ly/kent-c-dodds' />
         <Comment likes={49} comment="Amazing guy." name='Ryan Florence' src='https://bit.ly/sage-adebayo' />

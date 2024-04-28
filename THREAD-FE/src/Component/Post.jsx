@@ -10,13 +10,22 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atom/userAtom";
 import postAtom from "../atom/postAtom";
+import replyAtom from "../atom/replyAtom";
 
 const Post = ({ post, postedBy }) => {
+	console.log(post)
 	const [user, setUser] = useState(null);
 	const showToast = useShowToast();
 	const navigate = useNavigate();
 	const currentUser = useRecoilValue(userAtom);
 	const [posts, setPosts] = useRecoilState(postAtom);
+	const [reply, setReply] = useRecoilState(replyAtom);
+
+	// const [posts, setPosts] = useRecoilState(postAtom);
+
+	const [id0 , setId0] = useState("");
+	const [id1 , setId1] = useState("");
+	const [id2 , setId2] = useState("");
 
 	const handleDeletePost = async (e) => {
 		try {
@@ -28,7 +37,7 @@ const Post = ({ post, postedBy }) => {
 			})
 			showToast("Success" , "Post Deleted Successfully" , "success")
 			// navigate(`/${user.username}`)
-			const data = res.json();
+			const data = await res.json();
 			if(data.error){
 				showToast("Error" , data.error , "error")
 			}
@@ -49,6 +58,7 @@ const Post = ({ post, postedBy }) => {
 					showToast("Error", data.error, "error");
 					return;
 				}
+				console.log(data)
 				setUser(data);
                 // console.log(post)
 			} catch (error) {
@@ -57,8 +67,60 @@ const Post = ({ post, postedBy }) => {
 			}
 		};
 
+		const a = post.replies[0]?.userId
+		const b = post.replies[1]?.userId
+		const c = post.replies[2]?.userId
+		const getUser0 = async () => {
+			try {
+				const res = await fetch(`/api/users/profile/${a}`);
+				const data = await res.json();
+				if (data.error) {
+					// showToast("Error", data.error, "error");
+					return;
+				}
+				 setId0(data.profilePic)
+                // console.log(data)
+			} catch (error) {
+				showToast("Error", error.message, "error");
+			} 
+		};
+		getUser0();
+		const getUser1 = async () => {
+			try {
+				const res = await fetch(`/api/users/profile/${b}`);
+				const data = await res.json();
+				if (data.error) {
+					// showToast("Error", data.error, "error");
+					return;
+				}
+				 setId1(data.profilePic)
+                console.log(data)
+			} catch (error) {
+				showToast("Error", error.message, "error");
+			} 
+		};
+		getUser1();
+
+		const getUser2 = async () => {
+			try {
+				const res = await fetch(`/api/users/profile/${c}`);
+				const data = await res.json();
+				if (data.error) {
+					// showToast("Error", data.error, "error");
+					return;
+				}
+				 setId2(data.profilePic)
+                console.log(data)
+			} catch (error) {
+				showToast("Error", error.message, "error");
+			} 
+		};
+		getUser2();
+
+
+
 		getUser();
-	}, [postedBy, showToast ]);
+	}, [postedBy, showToast , setPosts  ]);
 
 
 if (!user) return null;
@@ -82,7 +144,7 @@ if (!user) return null;
 							<Avatar
 								size='xs'
 								name={post.username}
-								src={post.replies[0].userProfilePic}
+								src={id0}
 								position={"absolute"}
 								top={"0px"}
 								left='15px'
@@ -93,8 +155,8 @@ if (!user) return null;
 						{post.replies[1] && (
 							<Avatar
 								size='xs'
-								name='John doe'
-								src={post.replies[1].userProfilePic}
+								name={post.username}
+								src={id1}
 								position={"absolute"}
 								bottom={"0px"}
 								right='-5px'
@@ -105,8 +167,8 @@ if (!user) return null;
 						{post.replies[2] && (
 							<Avatar
 								size='xs'
-								name='John doe'
-								src={post.replies[2].userProfilePic}
+								name={post.username}
+								src={id2}
 								position={"absolute"}
 								bottom={"0px"}
 								left='4px'

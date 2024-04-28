@@ -34,7 +34,7 @@ const createPost = async (req, res) => {
          res.status(200).json(newPost)
 
     } catch (error) {
-        console.error("Error in post Controller page: " + error.message);
+        console.error("Error in post Controller page createpost: " + error.message);
         res.status(500).json({ error: error.message });
     }
 };
@@ -49,7 +49,7 @@ const getPost = async (req, res) => {
           res.status(200).json(post);
 
     } catch (error) {
-        console.error("Error in post Controller page: " + error.message);
+        console.error("Error in post Controller page getpost: " + error.message);
         res.status(500).json({ error: error.message });
     }
 };
@@ -69,7 +69,7 @@ const deletePost = async (req, res) => {
          res.status(201).json({message : "post deleted Successfully"})
 
     } catch (error) {
-        console.error("Error in post Controller page: " + error.message);
+        console.error("Error in post Controller page delete post: " + error.message);
         res.status(500).json({ error: error.message });
     }
 };
@@ -100,7 +100,7 @@ const likeUnlikePost = async (req, res) => {
 
 
     } catch (error) {
-        console.error("Error in post Controller page: " + error.message);
+        console.error("Error in post Controller page like unlike post: " + error.message);
         res.status(500).json({ error: error.message });
     }
 };
@@ -130,7 +130,7 @@ const replyPost = async (req, res) => {
           res.status(200).json(reply)
 
     } catch (error) {
-        console.error("Error in post Controller page: " + error.message);
+        console.error("Error in post Controller page reply post: " + error.message);
         res.status(500).json({ error: error.message });
     }
 };
@@ -150,7 +150,7 @@ const getFeedPost = async (req, res) => {
 
            res.status(200).json(feedPosts)
     } catch (error) {
-        console.error("Error in post Controller page: " + error.message);
+        console.error("Error in post Controller page get feed post: " + error.message);
         res.status(500).json({ error: error.message });
     }
 };
@@ -162,12 +162,12 @@ const getUserPosts = async (req, res)  => {
     try {
         const user = await User.findOne({username});
         if(!user){
-            res.status(404).json({ error : "user not found" });
+          return  res.status(404).json({ error : "user not found" });
         }
         const posts = await Post.find({postedBy:user._id}).sort({createdAt : -1})
         res.status(200).json(posts);
         } catch (error) {
-          console.error("Error in post Controller page: " + error.message);
+          console.error("Error in post Controller page getuserpost: " + error.message);
         res.status(500).json({ error: error.message });
     }
 }

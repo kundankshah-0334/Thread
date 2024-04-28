@@ -1,32 +1,54 @@
-import { useState } from "react"
-import { Avatar, Box, Button, Divider, Flex, Image, Text } from "@chakra-ui/react"
-// import { Menu, MenuButton, MenuList, MenuItem, } from '@chakra-ui/react'
-import { useToast } from '@chakra-ui/react'
-// import { BsThreeDots } from "react-icons/bs"
-// import Actions from "./Actions"
-
+import { useEffect, useState } from "react"
+import { Avatar, Divider, Flex, Text } from "@chakra-ui/react"
+import useShowToast from "../hooks/useShowToast";
 const Comment = ({reply , lastReply}) => {
 
-    const toast = useToast()
-    console.log(reply);
-    const [liked, setLiked] = useState(false)
-    const copyThreadLink = () => {
-        const currentLocation = "markzukarbarg/post/1";
-        navigator.clipboard.writeText(currentLocation).then(() => {
-            toast({
-                description: "URl Copied to Clipboard.",
-                status: 'success',
-                duration: 1000,
-                isClosable: true,
-            })
-        })
-    }
+    const showToast = useShowToast();
+    
+    console.log(reply.username)
+
+    const [ commentProfile , setCommentProfile] = useState("")
+    // const  { user , loading } = useGetUserProfile()
+        // const userProfileImage = user.profilePic;
+
+    // if(user){
+    //     console.log(userProfileImage)
+    // }
+
+const username = reply.username;
+
+
+
+
+    useEffect(() => {
+		const getUser = async () => {
+			try {
+				const res = await fetch(`/api/users/profile/${username}`);
+				const data = await res.json();
+				if (data.error) {
+					showToast("Error", data.error, "error");
+					return;
+				}
+				if (data.isFrozen) {
+					setCommentProfile(null);
+					return;
+				}
+				setCommentProfile(data);
+                console.log(data)
+			} catch (error) {
+				showToast("Error", error.message, "error");
+			} finally {
+				setLoading(false);
+			}
+		};
+		getUser();
+	}, [username, showToast]);
 
 
     return (
 		<>
 			<Flex gap={4} py={2} my={2} w={"full"}>
-				<Avatar src={reply.userProfilePic} size={"sm"} />
+				<Avatar src={commentProfile.profilePic} size={"sm"} />
 				<Flex gap={1} w={"full"} flexDirection={"column"}>
 					<Flex w={"full"} justifyContent={"space-between"} alignItems={"center"}>
 						<Text fontSize='sm' fontWeight='bold'>
@@ -39,6 +61,41 @@ const Comment = ({reply , lastReply}) => {
 			{!lastReply ? <Divider /> : null}
 		</>
 	);
+
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // const toast = useToast()
+    // console.log(reply);
+    // const copyThreadLink = () => {
+    //     const currentLocation = "markzukarbarg/post/1";
+    //     navigator.clipboard.writeText(currentLocation).then(() => {
+    //         toast({
+    //             description: "URl Copied to Clipboard.",
+    //             status: 'success',
+    //             duration: 1000,
+    //             isClosable: true,
+    //         })
+    //     })
+    // }
+
+
+   
 
     // return (
     //     <div>
@@ -74,6 +131,6 @@ const Comment = ({reply , lastReply}) => {
         
     // )
 
-}
+// }
 
 export default Comment

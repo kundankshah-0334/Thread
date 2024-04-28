@@ -68,9 +68,10 @@ const Actions = ({ post }) => {
 		}
 	}
 	const handleReply = async () => {
+		if (!user) return showToast("Error", "You must have to login to like.", "error")
+		if(isReplying) return;
 		setIsReplying(true)
 		try {
-			if (!user) return showToast("Error", "You must have to login to like.", "error")
 			const res = await fetch("/api/posts/reply/" + post._id, {
 				method: "PUT",
 				headers: {

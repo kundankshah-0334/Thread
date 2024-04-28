@@ -21,6 +21,7 @@ const UserPage = () => {
 
 
     const getPosts = async () => {
+      if(!user) return ;
       setIsFetching(true)
       try {
         const res = await fetch(`/api/posts/user/${username}`)
@@ -30,6 +31,7 @@ const UserPage = () => {
           showToast("Error", data.error, "error");
           return;
         }
+        // console.log(data);
         setPosts(data);
       } catch (error) {
         showToast("Error", error, "error");
@@ -41,7 +43,7 @@ const UserPage = () => {
     // getUser();
     getPosts();
 
-  }, [username, showToast , setPosts]);
+  }, [username, showToast , setPosts , user]);
 console.log("post is here" , posts);
   if (!user && loading) {
     return (
@@ -56,7 +58,7 @@ console.log("post is here" , posts);
   }
 
   return (
-    <div key={posts._id}>
+    <>
       <UserHeader user={user} />
       {!isFetching && posts.length === 0 && <h1>No post Found</h1>}
       {isFetching && (
@@ -66,9 +68,9 @@ console.log("post is here" , posts);
         )}
 
         {posts.map((post) => (
-          <Post key={Post._id} post={post} postedBy={post.postedBy}/>
+          <Post key={post._id} post={post} postedBy={post.postedBy} />
         ))}
-    </div>
+    </>
   )
 }
 
