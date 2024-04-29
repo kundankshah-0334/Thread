@@ -20,7 +20,7 @@ export default function LoginCard() {
   const handleLogin = async () => {
     setLoading(true)
     try {
-      console.log("login clicked")
+      // console.log("login clicked")
       const res = await fetch("/api/users/login" , {
         method: "POST",
         headers : {
@@ -30,7 +30,7 @@ export default function LoginCard() {
       })
 
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
 
       if(data.error){
         toast({
@@ -46,7 +46,7 @@ export default function LoginCard() {
       localStorage.setItem("user-thread" , JSON.stringify(data))
       setUser(data);
     } catch (error) {
-      console.log({message : error.message});
+      // console.log({message : error.message});
     } finally{
       setLoading(false)
     }

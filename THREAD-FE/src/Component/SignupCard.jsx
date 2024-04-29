@@ -40,7 +40,7 @@ export default function SignupCard() {
 
   const handleSubmit = async () => {
     try {
-      console.log(inputs);  
+      // console.log(inputs);  
       const res = await fetch("/api/users/signup", {   
         method: "POST",
         headers: {
@@ -63,9 +63,9 @@ export default function SignupCard() {
       localStorage.setItem("user-thread",JSON.stringify(data));
       setUser(data)
       // localStorage.setItem("user-thread",JSON.stringify(data));
-      console.log(data); // Logs the parsed JSON data to the console
+      // console.log(data); // Logs the parsed JSON data to the console
     } catch (error) {
-      console.log(error); // Logs any errors that occur during the process
+      // console.log(error); // Logs any errors that occur during the process
       toast({
         title:"Error",
         description:data.error,

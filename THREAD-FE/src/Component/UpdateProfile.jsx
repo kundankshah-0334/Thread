@@ -44,7 +44,7 @@ export default function UpdateProfile() {
             showToast("Success", "Update", "success")
             setUser(data);
             localStorage.setItem("user-thread", JSON.stringify(data));
-            console.log(data);
+            // console.log(data);
 
 
 

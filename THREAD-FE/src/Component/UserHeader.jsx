@@ -18,7 +18,7 @@ const UserHeader = ({ user }) => {
     const [updating, setUpdating] = useState(false);
 
 
-    console.log(following);
+    // console.log(following);
     const copyURL = () => {
         const currentLocation = window.location.href;
         navigator.clipboard.writeText(currentLocation).then(() => {
@@ -60,7 +60,7 @@ const UserHeader = ({ user }) => {
                 user.followers.push(currentUser?._id);
             }
             setFollowing(!following)
-            console.log(data);
+            // console.log(data);
 
         } catch (error) {
             showToast("Error", error, "error");

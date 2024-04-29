@@ -31,7 +31,7 @@ const Actions = ({ post }) => {
 				},
 			})
 			const data = await res.json();
-			console.log(data)
+			// console.log(data)
 			if (data.error) {
 				showToast("Error", data.eror, "error")
 			}
@@ -81,7 +81,7 @@ const Actions = ({ post }) => {
 			})
 
 			const data = await res.json();
-			console.log(data)
+			// console.log(data)
 			if (data.error) return showToast("Error", data.eror, "error");
 			// setPost({ ...post, replies: [...post.replies, data.reply] })
 
@@ -94,7 +94,7 @@ const Actions = ({ post }) => {
 			setPosts(updatedPosts);
 
 			showToast("Success", "Reply posted successfully", "success")
-			console.log(data);
+			// console.log(data);
 			onClose();
 			setReply("")
 

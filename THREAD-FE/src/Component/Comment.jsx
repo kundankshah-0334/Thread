@@ -5,7 +5,7 @@ const Comment = ({reply , lastReply}) => {
 
     const showToast = useShowToast();
     
-    console.log(reply.username)
+    // console.log(reply.username)
 
     const [ commentProfile , setCommentProfile] = useState("")
     // const  { user , loading } = useGetUserProfile()
@@ -34,7 +34,7 @@ const username = reply.username;
 					return;
 				}
 				setCommentProfile(data);
-                console.log(data)
+                // console.log(data)
 			} catch (error) {
 				showToast("Error", error.message, "error");
 			} finally {

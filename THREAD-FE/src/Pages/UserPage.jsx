@@ -26,7 +26,7 @@ const UserPage = () => {
       try {
         const res = await fetch(`/api/posts/user/${username}`)
         const data = await res.json();
-        console.log(data)
+        // console.log(data)
         if (data.error) {
           showToast("Error", data.error, "error");
           return;
@@ -44,7 +44,7 @@ const UserPage = () => {
     getPosts();
 
   }, [username, showToast , setPosts , user]);
-console.log("post is here" , posts);
+// console.log("post is here" , posts);
   if (!user && loading) {
     return (
       <Flex justifyContent={"center"}>

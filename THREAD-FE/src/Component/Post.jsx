@@ -10,18 +10,15 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atom/userAtom";
 import postAtom from "../atom/postAtom";
-import replyAtom from "../atom/replyAtom";
 
 const Post = ({ post, postedBy }) => {
-	console.log(post)
 	const [user, setUser] = useState(null);
 	const showToast = useShowToast();
 	const navigate = useNavigate();
 	const currentUser = useRecoilValue(userAtom);
 	const [posts, setPosts] = useRecoilState(postAtom);
-	const [reply, setReply] = useRecoilState(replyAtom);
 
-	// const [posts, setPosts] = useRecoilState(postAtom);
+	// const [posts, setsetPosts] = useRecoilState(postAtom);
 
 	const [id0 , setId0] = useState("");
 	const [id1 , setId1] = useState("");
@@ -58,7 +55,7 @@ const Post = ({ post, postedBy }) => {
 					showToast("Error", data.error, "error");
 					return;
 				}
-				console.log(data)
+				// console.log(data)
 				setUser(data);
                 // console.log(post)
 			} catch (error) {
@@ -94,7 +91,7 @@ const Post = ({ post, postedBy }) => {
 					return;
 				}
 				 setId1(data.profilePic)
-                console.log(data)
+                // console.log(data)
 			} catch (error) {
 				showToast("Error", error.message, "error");
 			} 
@@ -110,7 +107,7 @@ const Post = ({ post, postedBy }) => {
 					return;
 				}
 				 setId2(data.profilePic)
-                console.log(data)
+                // console.log(data)
 			} catch (error) {
 				showToast("Error", error.message, "error");
 			} 

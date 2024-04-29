@@ -22,7 +22,7 @@ const LogoutUser = () => {
               });
 
               const data = await res.json();  
-              console.log(data)
+              // console.log(data)
       if(data.error){
         toast({
           title:"Error",
@@ -39,7 +39,7 @@ const LogoutUser = () => {
       
      
       catch (error) {
-            console.log(error)
+            // console.log(error)
             res.status(500).json({error : error})
             toast({
               title:"Error",
