@@ -16,7 +16,9 @@ import {
 // import { selectedConversationAtom } from "../atoms/messagesAtom";
 
 // const Conversation = ({ conversation, isOnline }) => {
-const Conversation = () => {
+const Conversation = ({conversation}) => {
+	const user = conversation.participants[0];
+	const lastMessage = conversation.lastMessage;
 	// const user = conversation.participants[0];
 	// const currentUser = useRecoilValue(userAtom);
 	// const lastMessage = conversation.lastMessage;
@@ -63,10 +65,10 @@ const Conversation = () => {
 
 			<Stack direction={"column"} fontSize={"sm"}>
 				<Text fontWeight='700' display={"flex"} alignItems={"center"}>
-					Jhon doe <Image src='/verified.png' w={4} h={4} ml={1} /> 
+					{user.username}<Image src='/verified.png' w={4} h={4} ml={1} /> 
 				</Text>
 				<Text fontSize={"xs"} display={"flex"} alignItems={"center"} gap={1}>
-				Hello some message ....
+				{lastMessage.text}
 					{/* {currentUser._id === lastMessage.sender ? (
 						<Box color={lastMessage.seen ? "blue.400" : ""}>
 							<BsCheck2All size={16} />

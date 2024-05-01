@@ -1,25 +1,59 @@
 // import { Box , Flex } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 // import { GiConversation } from "react-icons/gi";
 
 
 import { SearchIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, Input, Skeleton, SkeletonCircle, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Skeleton, SkeletonCircle, Text, useColorModeValue, useStatStyles } from "@chakra-ui/react";
 // import Conversation from "../components/Conversation";
 import { GiConversation } from "react-icons/gi";
 import Conversation from '../Component/Conversation';
 import MessageContainer from '../Component/MessageContainer';
 // import MessageContainer from "../components/MessageContainer";
 // import { useEffect, useState } from "react";
-// import useShowToast from "../hooks/useShowToast";
+import useShowToast from "../hooks/useShowToast";
+import { useRecoilState, useRecoilValue } from 'recoil';
+// import  conversationAtom  from '../atom/messageAtom.js';
 // import { useRecoilState, useRecoilValue } from "recoil";
 // import { conversationsAtom, selectedConversationAtom } from "../atoms/messagesAtom";
 // import userAtom from "../atoms/userAtom";
 // import { useSocket } from "../context/SocketContext";
+import { conversationsAtom } from "../atom/messagesAtom"
 
 
 
 const ChatPage = () => {
+
+	const [ loadingConversations , setLoadingConversations] = useState(true);
+	const [conversations , setConversations] = useRecoilState(conversationsAtom)
+
+
+const showToast = useShowToast()
+	useEffect(() => {
+
+		const getConversations = async () => {
+			try {
+				const res= await fetch("/api/messages/conversations");
+				const data = await res.json();
+
+				if(data.error){
+					showToast("Error" , data.error , "error")
+					return;
+				}
+				console.log(data)
+				setConversations(data)
+			} catch (error) {
+				showToast("Error" , error.message , "error");
+				setLoadingConversations(false)
+				return
+			} finally{
+				setLoadingConversations(false);
+			}
+		}
+		getConversations();
+	} , [showToast ])
+
+
     return (
         <Box position={"absolute"} w={{
             base: "100%",
@@ -53,7 +87,7 @@ const ChatPage = () => {
 						</Flex>
 					</form>
 
-					{false &&
+					{loadingConversations &&
 						[0, 1, 2, 3, 4].map((_, i) => (
 							<Flex  gap={4} alignItems={"center"} p={"1"} borderRadius={"md"}>
 								<Box>
@@ -66,17 +100,13 @@ const ChatPage = () => {
 							</Flex>
 						))}
 
-					{/* {!loadingConversations &&
-						conversations.map((conversation) => ( */}
-							<Conversation />
-							<Conversation />
-							<Conversation />
-							<Conversation />
-								{/* // key={conversation._id}
-								// isOnline={onlineUsers.includes(conversation.participants[0]._id)}
-								// conversation={conversation} */}
-							{/* /> */}
-						{/* ))} */}
+				 {/* {!loadingState && ( <Conversation /> )}  */}
+					{!loadingConversations &&
+						conversations.map((conversation) => (
+							 
+							 	 <Conversation  key={conversation._id} conversation={conversation} />
+							 
+						))}
 				</Flex>
 				{/* {!selectedConversation._id && ( */}
 
