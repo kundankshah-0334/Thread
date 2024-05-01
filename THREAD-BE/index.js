@@ -1,12 +1,12 @@
 
 import express from 'express';
-import bcrypt from 'bcryptjs';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import ConnectionDB from './db/Connection.js';
 import userRoute from './routes/userRoute.js';
 import postRoutes from './routes/postRoutes.js'
+import messageRoutes from "./routes/messageRoutes.js"
 import { v2 as cloudinary} from "cloudinary";
 dotenv.config();
 ConnectionDB();
@@ -24,6 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/api/users', userRoute);
 app.use('/api/posts', postRoutes);
+app.use('/api/messages', messageRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
