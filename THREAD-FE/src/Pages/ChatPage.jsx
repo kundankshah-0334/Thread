@@ -18,7 +18,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 // import { conversationsAtom, selectedConversationAtom } from "../atoms/messagesAtom";
 // import userAtom from "../atoms/userAtom";
 // import { useSocket } from "../context/SocketContext";
-import { conversationsAtom } from "../atom/messagesAtom"
+import { conversationsAtom, selectedConversationAtom } from "../atom/messagesAtom"
 
 
 
@@ -26,6 +26,7 @@ const ChatPage = () => {
 
 	const [ loadingConversations , setLoadingConversations] = useState(true);
 	const [conversations , setConversations] = useRecoilState(conversationsAtom)
+	const [selectedConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom);
 
 
 const showToast = useShowToast()
@@ -51,7 +52,7 @@ const showToast = useShowToast()
 			}
 		}
 		getConversations();
-	} , [showToast ])
+	} , [showToast , setConversations])
 
 
     return (
@@ -108,12 +109,12 @@ const showToast = useShowToast()
 							 
 						))}
 				</Flex>
-				{/* {!selectedConversation._id && ( */}
+				{!selectedConversation._id && (
 
 
 
 
-					{/* <Flex
+					<Flex
 						flex={70}
 						borderRadius={"md"}
 						p={2}
@@ -124,13 +125,15 @@ const showToast = useShowToast()
 					>
 						<GiConversation size={100} />
 						<Text fontSize={20}>Select a conversation to start messaging</Text>
-					</Flex> */}
+					</Flex>
 
 
 					
-				{/* )} */}
+				)}
 
-				  <MessageContainer /> 
+				{selectedConversation._id && <MessageContainer /> }
+
+				  {/* <MessageContainer />  */}
 			</Flex>
 		</Box>
 	);

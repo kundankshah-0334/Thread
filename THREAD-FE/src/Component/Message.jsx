@@ -1,25 +1,15 @@
-// import React from 'react'
-
-// const Message = () => {
-//   return (
-//     <div>
-      
-//     </div>
-//   )
-// }
-
-// export default Message
-
-
 import { Avatar, Box, Flex, Image, Skeleton, Text } from "@chakra-ui/react";
-// import { selectedConversationAtom } from "../atoms/messagesAtom";
 import { useRecoilValue } from "recoil";
 import userAtom from "../atom/userAtom";
 import { BsCheck2All } from "react-icons/bs";
 import { useState } from "react";
+import { selectedConversationAtom } from "../atom/messagesAtom";
 
-const Message = ({  ownMessage }) => {
-	// const selectedConversation = useRecoilValue(selectedConversationAtom);
+const Message = ({  ownMessage , message }) => {
+	const selectedConversation = useRecoilValue(selectedConversationAtom);
+	const user =  useRecoilValue(userAtom)
+	// const [selectedConversation] = useRecoilState(selectedConversationAtom);
+
 	// const user = useRecoilValue(userAtom);
 	// const [imgLoaded, setImgLoaded] = useState(false);
 	return (
@@ -29,10 +19,7 @@ const Message = ({  ownMessage }) => {
 					{/* {message.text && ( */}
 						<Flex bg={"green.800"} maxW={"350px"} p={1} borderRadius={"md"}>
 							<Text color={"white"}>
-              
-               sdfjasd fasjdf asdfabhsdfljbnasdfasdasefmasdfjasfasdf
-              asdfasdfasdf asrdfasdf
-              
+				{message.text}
               </Text>
 							{/* <Box
 								alignSelf={"flex-end"}
@@ -71,15 +58,16 @@ const Message = ({  ownMessage }) => {
 						</Flex>
 					)} */}
 
-					<Avatar src="" w='7' h={7} />
+					<Avatar src={user.profilePic} w='7' h={7} />
 				</Flex>
 			) : (
 				<Flex gap={2}>
-					<Avatar src="" w='7' h={7} />
+					<Avatar src={selectedConversation.userProfilePic} w='7' h={7} />
 
 					{/* {message.text && ( */}
 						<Text maxW={"350px"} bg={"gray.400"} p={1} borderRadius={"md"} color={"black"}>
-						 sf asefasdf asdfasdfas as awdsfasdfasdf asd ase faswef scvzxdsf vasd 
+						{message.text}
+
 						</Text>
 					{/* )} */}
 					{/* {message.img && !imgLoaded && (

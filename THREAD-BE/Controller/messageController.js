@@ -19,9 +19,9 @@ async function sendMessage(req,res){
                     sender : senderId,
                 },
             });
+            await conversation.save()
         }
 
-        await conversation.save()
 
         const newMessage = new Message({
             conversationId : conversation._id,
@@ -40,7 +40,7 @@ async function sendMessage(req,res){
             }),
         ])
 
-        res.status(201).json({newMessage})
+        res.status(201).json(newMessage)
         
     } catch (error) {
         res.status(500).json({ error: error.message });

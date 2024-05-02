@@ -1,15 +1,3 @@
-// import React from 'react'
-
-// const MessageInput = () => {
-//   return (
-//     <div>
-      
-//     </div>
-//   )
-// }
-
-// export default MessageInput
-
 import {
 	Flex,
 	Image,
@@ -29,19 +17,63 @@ import {
 import { IoSendSharp } from "react-icons/io5";
 import { BsFillImageFill } from "react-icons/bs";
 import { useState } from "react";
+import useShowToast from "../hooks/useShowToast";
+import { conversationsAtom, selectedConversationAtom } from "../atom/messagesAtom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-const MessageInput = () => {
+const MessageInput = ({setMessages}) => {
 
     const [messageText, setMessageText] = useState("");
+ const selectedConversation = useRecoilValue(selectedConversationAtom);
+ 
+ const setConversations = useSetRecoilState(conversationsAtom);
+
+//  const setConversations = useRecoilState(conversationsAtom)
+	const showToast = useShowToast();
 
 	const handleSendMessage = async (e) => {
 		e.preventDefault();
-
-		setIsSending(true);
-
+		if(!messageText) return;
+		// setIsSending(true);
 		try {
+			const res = await fetch("api/messages" , {
+				method:"POST",
+				headers:{
+					"Content-Type" : "application/json",
+				},
+				body:JSON.stringify({
+					message : messageText,
+					recipientId: selectedConversation.userId,
+				}),
+			})
+			const data = await  res.json();
+
+			console.log(data)
+			if(data.error){
+				showToast("Error" , data.error , "error");
+				return;
+			}
+			setMessages((messages) => [...messages , data]);
+
+			setConversations((prevConvs) => {
+				const updatedConversations = prevConvs.map((conversation) => {
+					if (conversation._id === selectedConversation._id) {
+						return {
+							...conversation,
+							lastMessage: {
+								text: messageText,
+								sender: data.sender,
+							},
+						};
+					}
+					return conversation;
+				});
+				return updatedConversations;
+			});
+			setMessageText("");
 		 
 		} catch (error) {
+			showToast("Error" , error.message , "error")
 		} 
 	};
 	return (
