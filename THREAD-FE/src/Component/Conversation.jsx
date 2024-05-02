@@ -41,7 +41,7 @@ const Conversation = ({conversation}) => {
 					userId: user._id,
 					userProfilePic: user.profilePic,
 					username: user.username,
-					// mock: conversation.mock,
+					mock: conversation.mock,
 				})
 			}
 			bg={
@@ -56,7 +56,7 @@ const Conversation = ({conversation}) => {
 						sm: "sm",
 						md: "md",
 					}}
-					src={user.profilePic}
+					src={user?.profilePic}
 				>
 					 <AvatarBadge boxSize='1em' bg='green.500' /> 
 				</Avatar>
@@ -64,7 +64,7 @@ const Conversation = ({conversation}) => {
 
 			<Stack direction={"column"} fontSize={"sm"}>
 				<Text fontWeight='700' display={"flex"} alignItems={"center"}>
-					{user.username}<Image src='/verified.png' w={4} h={4} ml={1} /> 
+					{user?.username}<Image src='/verified.png' w={4} h={4} ml={1} /> 
 				</Text>
 				<Text fontSize={"xs"} display={"flex"} alignItems={"center"} gap={1}>
 				{/* {lastMessage.text.length > 18 ? lastMessage.text.substring(0 , 18 ) + "..." : lastMessage.text} */}
