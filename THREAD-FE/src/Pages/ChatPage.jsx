@@ -1,27 +1,14 @@
-// import { Box , Flex } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
-// import { GiConversation } from "react-icons/gi";
-
-
 import { SearchIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Input, Skeleton, SkeletonCircle, Text, useColorModeValue, useStatStyles } from "@chakra-ui/react";
-// import Conversation from "../components/Conversation";
 import { GiConversation } from "react-icons/gi";
 import Conversation from '../Component/Conversation';
 import MessageContainer from '../Component/MessageContainer';
-// import MessageContainer from "../components/MessageContainer";
-// import { useEffect, useState } from "react";
 import useShowToast from "../hooks/useShowToast";
 import { useRecoilState, useRecoilValue } from 'recoil';
-// import  conversationAtom  from '../atom/messageAtom.js';
-// import { useRecoilState, useRecoilValue } from "recoil";
-// import { conversationsAtom, selectedConversationAtom } from "../atoms/messagesAtom";
-// import userAtom from "../atoms/userAtom";
-// import { useSocket } from "../context/SocketContext";
 import { conversationsAtom, selectedConversationAtom } from "../atom/messagesAtom"
 import userAtom from '../atom/userAtom';
-
-
+import { useSocket } from '../Context/SocketContext';
 
 const ChatPage = () => {
 
@@ -32,8 +19,35 @@ const ChatPage = () => {
 	const [searchText , setSearchText] = useState("")
 	const [searchingUser , setSearchinguser] = useState(false)
 
+	const {socket , onlineUsers} = useSocket();
+
 
 const showToast = useShowToast()
+
+
+
+useEffect(() => {
+	socket?.on("messagesSeen", ({ conversationId }) => {
+		setConversations((prev) => {
+			const updatedConversations = prev.map((conversation) => {
+				if (conversation._id === conversationId) {
+					return {
+						...conversation,
+						lastMessage: {
+							...conversation.lastMessage,
+							seen: true,
+						},
+					};
+				}
+				return conversation;
+			});
+			return updatedConversations;
+		});
+	});
+}, [socket, setConversations]);
+
+
+
 	useEffect(() => {
 
 		const getConversations = async () => {
@@ -165,7 +179,9 @@ const showToast = useShowToast()
 					{!loadingConversations &&
 						conversations.map((conversation) => (
 							 
-							 	 <Conversation  key={conversation._id} conversation={conversation} />
+							 	 <Conversation  key={conversation?._id}
+								 isOnline = {onlineUsers.includes(conversation.participants[0]?._id)}
+								  conversation={conversation} />
 							 
 						))}
 				</Flex>

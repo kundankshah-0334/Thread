@@ -8,10 +8,11 @@ import userRoute from './routes/userRoute.js';
 import postRoutes from './routes/postRoutes.js'
 import messageRoutes from "./routes/messageRoutes.js"
 import { v2 as cloudinary} from "cloudinary";
+import { app , server } from "./socket/socket.js"
 dotenv.config();
 ConnectionDB();
 
-const app = express();
+// const app = express();
 
 cloudinary.config({
     cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
@@ -27,6 +28,6 @@ app.use('/api/posts', postRoutes);
 app.use('/api/messages', messageRoutes);
 
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
 });

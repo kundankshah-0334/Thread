@@ -1,5 +1,6 @@
 import Message from "../Model/messageModel.js";
 import Conversation from "../Model/conversationModel.js";
+import { getRecipientSocketId , io } from "../socket/socket.js";
 
 async function sendMessage(req,res){
     try {
@@ -39,6 +40,10 @@ async function sendMessage(req,res){
                 },
             }),
         ])
+        const recipientSockedId = getRecipientSocketId(recipientId)
+        if(recipientSockedId){
+            io.to(recipientSockedId).emit("newMessage" , newMessage);
+        }
 
         res.status(201).json(newMessage)
         
@@ -86,20 +91,12 @@ async function getConversations(req,res){
             select : "username profilePic"
         })
 
-        // conversations.forEach((conversation) => {
-        //     conversation.participants= conversation.participants.filter(
-        //         (participants) => participants._id .toString() !== userId.toString()
-
-        //     )
-        // })
-       
         	// remove the current user from the participants array
 		conversations.forEach((conversation) => {
 			conversation.participants = conversation.participants.filter(
 				(participant) => participant._id.toString() !== userId.toString()
 			);
 		});
-
 
         res.status(200).json(conversations)
         
