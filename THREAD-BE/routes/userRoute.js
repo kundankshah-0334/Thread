@@ -1,5 +1,5 @@
 import express from 'express';
-import { signUpuser, loginUser , logoutUser , followUnfollowUser , updateUser , getSuggestedUsers ,  getProfile , freezeAccount } from "../Controller/userController.js";
+import { signUpuser, loginUser , logoutUser , followUnfollowUser , updateUser , getSuggestedUsers ,  getProfile , freezeAccount } from "../controller/userController.js";
 import ProtectRoute from '../middelware/ProtectRoute.js';
 const router = express.Router();
 
