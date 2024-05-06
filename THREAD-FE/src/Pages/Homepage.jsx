@@ -1,10 +1,11 @@
-import { Button, Flex, Spinner } from "@chakra-ui/react"
+import { Box, Button, Flex, Spinner } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
 import useShowToast from "../hooks/useShowToast"
 import { useEffect, useState } from "react";
 import Post from "../Component/Post";
 import { useRecoilState } from "recoil";
 import postAtom from "../atom/postAtom";
+import SuggestedUsers from "../Component/SuggestedUsers";
 
 const Homepage = () => {
     const [posts, setPosts] = useRecoilState(postAtom);
@@ -22,7 +23,7 @@ const Homepage = () => {
                 const data = await res.json();
                 if (data.error) {
                     ShowToast("Error", data.error, "error")
-                } 
+                }
                 // console.log(data);
                 setPosts(data)
 
@@ -34,23 +35,32 @@ const Homepage = () => {
             }
         }
         getFeedPosts();
-    }, [ShowToast , setPosts])
+    }, [ShowToast, setPosts])
 
     return (
-        <>
-            {!loading && posts.length === 0 && <h1>Please Follow some users to see the feed .</h1> }
+        <Flex gap={10} alignItems={"flex-start"}>
+            <Box flex={70}> 
+                {!loading && posts.length === 0 && <h1>Please Follow some users to see the feed .</h1>}
 
 
-            {loading &&
-                <Flex justifyContent={"center"}>
-                    <Spinner size='xl' />
-                </Flex>
-            }
-            {posts.map((post)=>(
-                <Post key={post._id} post={post} postedBy={post.postedBy} />
-            ))}
+                {loading &&
+                    <Flex justifyContent={"center"}>
+                        <Spinner size='xl' />
+                    </Flex>
+                }
+                {posts.map((post) => (
+                    <Post key={post._id} post={post} postedBy={post.postedBy} />
+                ))}
+            </Box>
+            <Box flex={30} border={"1px soild white"}
+             display={{
+                base:"none",
+                md:"block",
+            }}>
+               <SuggestedUsers />
+            </Box>
 
-        </>
+        </Flex>
     )
 }
 
