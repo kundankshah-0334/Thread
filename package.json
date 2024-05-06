@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+		"dev": "NODE_ENV=development nodemon THREAD-BE/index.js",
+		"start": "NODE_ENV=production node THREAD-BE/index.js",
+		"build": "npm install && npm install --prefix THREAD-FE && npm run build --prefix THREAD-FE"
+	},
   "type": "module",
   "author": "",
   "license": "ISC",
