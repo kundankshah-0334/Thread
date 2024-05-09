@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-		"dev": "set NODE_ENV=development & nodemon THREAD-BE/index.js",
-		"start": "set NODE_ENV=production & node THREAD-BE/index.js",
+		"dev": "set NODE_ENV=development && nodemon THREAD-BE/index.js",
+		"start": "set NODE_ENV=production && node THREAD-BE/index.js", 
 		"build": "npm install && npm install --prefix THREAD-FE && npm run build --prefix THREAD-FE"
 	},
   "type": "module",
@@ -23,3 +23,4 @@
     "socket.io": "^4.7.5"
   }
 }
+
